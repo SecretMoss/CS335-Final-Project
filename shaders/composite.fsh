@@ -43,14 +43,13 @@ vec3 projectAndDivide(mat4 projectionMatrix, vec3 position){
 }
 
 vec3 getShadow(vec3 shadowScreenPos){
-  // --- NEW CODE: Prevent shadow smearing at the edges ---
   if(shadowScreenPos.x < 0.0 || shadowScreenPos.x > 1.0 || 
-     shadowScreenPos.y < 0.0 || shadowScreenPos.y > 1.0){
+     shadowScreenPos.y < 0.0 || shadowScreenPos.y > 1.0 ||
+     shadowScreenPos.z < 0.0 || shadowScreenPos.z > 1.0){ 
     
-    // If the pixel is outside the shadow map, force it to be fully lit
+    // If the pixel is outside the shadow box in any direction, force it to be fully lit
     return vec3(1.0); 
   }
-  // ------------------------------------------------------
 
   float transparentShadow = step(shadowScreenPos.z, texture(shadowtex0, shadowScreenPos.xy).r); // sample the shadow map containing everything
 

@@ -4,6 +4,9 @@ out vec2 texcoord;
 out vec4 glcolor;
 out vec3 worldPos; // Sent to the fragment shader
 
+out vec2 lightmapCoord;
+out vec3 normal;
+
 
 uniform float frameTimeCounter;
 uniform sampler2D noisetex;
@@ -15,7 +18,6 @@ flat out int blockId;
 
 
 void main() {
-// We add 0.5 to prevent floating point rounding errors
 blockId = int(mc_Entity.x + 0.5);
 
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
@@ -30,14 +32,15 @@ blockId = int(mc_Entity.x + 0.5);
     if (gl_Normal.y > 0.5 && blockId == 100) {
         
         vec2 waveCoord = worldPos.xz * 0.1; 
-        float wave1 = texture(noisetex, waveCoord * 0.5 + (frameTimeCounter * 0.01)).r;
-        float wave2 = texture(noisetex, waveCoord * 1.5 - (frameTimeCounter * 0.015)).r;
+        float wave1 = texture(noisetex, waveCoord * 0.5 + (frameTimeCounter * 0.003)).r;
+        float wave2 = texture(noisetex, waveCoord * 1.5 - (frameTimeCounter * 0.005)).r;
         float finalWaveHeight = (wave1 + wave2) / 2.0;
 
   
-        position.y += finalWaveHeight * 0.05; 
+        position.y += finalWaveHeight * 0.25; 
     }
 
-    // 6. Finalize the position using the newly displaced geometry
     gl_Position = gl_ModelViewProjectionMatrix * position;
+    lightmapCoord = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
+    normal = normalize(gl_NormalMatrix * gl_Normal);
 }
