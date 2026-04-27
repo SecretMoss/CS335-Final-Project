@@ -24,6 +24,7 @@ uniform float viewHeight;
 in vec2 texcoord;
 
 #include "/lib/distort.glsl"
+#include "/settings.glsl"
 
 /*
 const int colortex0Format = RGB16;

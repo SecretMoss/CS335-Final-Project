@@ -10,6 +10,9 @@ uniform vec3 skyColor;
 
 in vec4 glcolor;
 
+#include "/settings.glsl"
+
+
 float fogify(float x, float w) {
 	return w / (x * x + w);
 }
@@ -35,4 +38,7 @@ void main() {
 		vec3 pos = screenToView(vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight), 1.0));
 		color = vec4(calcSkyColor(normalize(pos)), 1.0);
 	}
+	#if BLACK_SKY == 1
+		color = vec4(0,0,0,1.0);
+	#endif
 }
