@@ -1,5 +1,7 @@
 #version 330 compatibility
 
+#include "/settings.glsl"
+
 uniform sampler2D lightmap;
 uniform sampler2D gtexture;
 
@@ -69,7 +71,7 @@ void main() {
 
         // Voronoi
         float vSpeed = frameTimeCounter * 0.6;
-        float vScale = 0.2; 
+        float vScale = WEB_SIZE; 
         
         float v = voronoi(worldPosition.xz * vScale, vSpeed);
         float webThickness = 2.0;
@@ -80,9 +82,12 @@ void main() {
         float totalWeb = clamp(web + web2, 0.0, 1.0);
 
         // Base color of the water
-        vec3 base = vec3(0.02, 0.05, 0.08); 
-        color.rgb = base * glcolor.rgb * texture(lightmap, lmcoord).rgb;
-        color.a = 0.15;
+        vec3 customColor = vec3(WATER_COLOR_R, WATER_COLOR_G, WATER_COLOR_B);
+    
+        vec3 finalBase = mix(glcolor.rgb, customColor, 1.0);
+        
+        color.rgb = finalBase * texture(lightmap, lmcoord).rgb;
+        color.a = WATER_SURFACE_ALPHA;
 
         // Depth Fog
         vec2 screenPos = gl_FragCoord.xy / vec2(viewWidth, viewHeight);
@@ -92,10 +97,10 @@ void main() {
         float depthDiff = linearizeDepth(opaqueDepth) - linearizeDepth(surfaceDepth);
         if (opaqueDepth > 0.9999) { depthDiff = 100.0; }
         
-        float fogDensity = 0.15; 
+        float fogDensity = WATER_FOG_DENSITY; 
         float depthFog = clamp(depthDiff * fogDensity, 0.0, 1.0);
 
-        vec3 deepColor = vec3(0.0, 0.01, 0.02); 
+        vec3 deepColor = vec3(DEEP_COLOR_R, DEEP_COLOR_G, DEEP_COLOR_B); 
         color.rgb = mix(color.rgb, deepColor, depthFog);
 
         // Fresnel
@@ -107,7 +112,7 @@ void main() {
 
         // Voronoi Caustics
         vec3 webColor = vec3(0.7, 0.9, 1.0); 
-        float webIntensity = 0.25; 
+        float webIntensity = WEB_INTENSITY;
         color.rgb += totalWeb * webColor * webIntensity;
 
         // Specular Glint
