@@ -4,6 +4,7 @@ out vec2 lmcoord;
 out vec2 texcoord;
 out vec4 glcolor;
 out float isWater;
+out vec3 normal;
 
 #include "/lib/waves.glsl"
 
@@ -14,7 +15,7 @@ uniform vec3 cameraPosition;
 uniform float frameTimeCounter;
 
 void main() {
-	//gl_Position = ftransform();
+
     vec4 my_vertex = gl_Vertex;
     vec4 viewing_space_vertex = gl_ModelViewMatrix * my_vertex;
     vec4 player_pos = gbufferModelViewInverse * viewing_space_vertex;
@@ -36,5 +37,6 @@ void main() {
 	lmcoord = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
 	glcolor = gl_Color;
 
+    normal = gl_NormalMatrix * gl_Normal;
 
 }

@@ -1,5 +1,3 @@
-// waves.glsl
-
 const int OCTAVES = 4;
 const float MAX_DISPLACEMENT = 0.10; 
 const float MAX_DIP = 0.35; 
