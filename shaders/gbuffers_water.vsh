@@ -5,6 +5,7 @@ out vec2 texcoord;
 out vec4 glcolor;
 out float isWater;
 out vec3 normal;
+out vec3 viewVector;
 
 #include "/lib/waves.glsl"
 
@@ -37,6 +38,7 @@ void main() {
 	lmcoord = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
 	glcolor = gl_Color;
 
+    viewVector = normalize(-viewing_space_vertex.xyz);
     normal = gl_NormalMatrix * gl_Normal;
 
 }
