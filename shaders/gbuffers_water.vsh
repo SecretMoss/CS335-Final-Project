@@ -6,6 +6,7 @@ out vec4 glcolor;
 out float isWater;
 out vec3 normal;
 out vec3 viewVector;
+out vec3 worldPosition;
 
 #include "/lib/waves.glsl"
 
@@ -21,6 +22,8 @@ void main() {
     vec4 viewing_space_vertex = gl_ModelViewMatrix * my_vertex;
     vec4 player_pos = gbufferModelViewInverse * viewing_space_vertex;
     vec3 world_pos = player_pos.xyz + cameraPosition;
+    worldPosition = world_pos;
+    
     if(mc_Entity.x == 100.0){
         isWater = 1.0;
 
