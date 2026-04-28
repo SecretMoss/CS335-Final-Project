@@ -1,46 +1,40 @@
 #version 330 compatibility
 
+out vec2 lmcoord;
 out vec2 texcoord;
 out vec4 glcolor;
-out vec3 worldPos; // Sent to the fragment shader
+out float isWater;
 
-out vec2 lightmapCoord;
-out vec3 normal;
+#include "/lib/waves.glsl"
 
+attribute vec4 mc_Entity;
 
-uniform float frameTimeCounter;
-uniform sampler2D noisetex;
 uniform mat4 gbufferModelViewInverse;
 uniform vec3 cameraPosition;
-
-in vec3 mc_Entity;    
-flat out int blockId; 
-
+uniform float frameTimeCounter;
 
 void main() {
-blockId = int(mc_Entity.x + 0.5);
+	//gl_Position = ftransform();
+    vec4 my_vertex = gl_Vertex;
+    vec4 viewing_space_vertex = gl_ModelViewMatrix * my_vertex;
+    vec4 player_pos = gbufferModelViewInverse * viewing_space_vertex;
+    vec3 world_pos = player_pos.xyz + cameraPosition;
+    if(mc_Entity.x == 100.0){
+        isWater = 1.0;
 
-    texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
-    glcolor = gl_Color;
+        float wave = getWaveHeight(world_pos, frameTimeCounter);
 
-    vec4 position = gl_Vertex;
-
-
-    vec4 viewPos = gl_ModelViewMatrix * position;
-    worldPos = (gbufferModelViewInverse * viewPos).xyz + cameraPosition;
-
-    if (gl_Normal.y > 0.5 && blockId == 100) {
-        
-        vec2 waveCoord = worldPos.xz * 0.1; 
-        float wave1 = texture(noisetex, waveCoord * 0.5 + (frameTimeCounter * 0.003)).r;
-        float wave2 = texture(noisetex, waveCoord * 1.5 - (frameTimeCounter * 0.005)).r;
-        float finalWaveHeight = (wave1 + wave2) / 2.0;
-
-  
-        position.y += finalWaveHeight * 0.25; 
+        my_vertex.y += wave;
+    } else{
+        isWater = 0.0;
     }
+    
 
-    gl_Position = gl_ModelViewProjectionMatrix * position;
-    lightmapCoord = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
-    normal = normalize(gl_NormalMatrix * gl_Normal);
+    gl_Position = gl_ModelViewProjectionMatrix * my_vertex;
+
+	texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
+	lmcoord = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
+	glcolor = gl_Color;
+
+
 }
