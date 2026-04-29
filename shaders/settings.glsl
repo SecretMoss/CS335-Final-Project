@@ -1,5 +1,5 @@
 #define GREEN_AMOUNT 0.0 // [0.0 0.25 0.5 1.0] Amount of green to add to the shadow map when drawing to the screen, for testing purposes
-#define BLACK_SKY 1 // [0 1] Whether to make the sky pure black, for testing purposes. This makes it easier to see the shadow map when drawing it to the screen.
+#define BLACK_SKY  0 // [0 1] Whether to make the sky pure black, for testing purposes. This makes it easier to see the shadow map when drawing it to the screen.
 #define GREY_AMOUNT 0.0 // [0.0 0.25 0.5 1.0] Amount of grey to add to the shadow map when drawing to the screen, for testing purposes
 #define SSAO 1.0 // [0.0 0.5 1.0 1.5 2.0] Screen Space Ambient Occlusion intensity
 #define WATER_FOG_DENSITY 0.02 // [0.001 0.005 0.01 0.02 0.03 0.04 0.05 0.08 0.10 0.12 0.15 0.20 0.25 0.30]
