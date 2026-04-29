@@ -156,8 +156,8 @@ void main() {
     color = mix(color, vec4(0.0, 1.0, 0.0, 1.0), GREEN_AMOUNT);
   #endif
   #if(GREY_AMOUNT > 0)
-    vec3 grey = (color.r + color.g + color.b) / 3.0;
-    color = mix(color, vec4(grey, 1.0), GREY_AMOUNT);
+    float grey = (color.r + color.g + color.b) / 3.0;
+    color = mix(color, vec4(grey, grey, grey, 1.0), GREY_AMOUNT);
   #endif
 
 }
